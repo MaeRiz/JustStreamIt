@@ -6,6 +6,7 @@ getDataByBest()
 
 var modal = document.getElementById("modalBox");
 var span = document.getElementsByClassName("close")[0];
+let body = document.getElementsByTagName('body')[0]
 
 function showModal(movieid) {
     
@@ -14,25 +15,26 @@ function showModal(movieid) {
     $.get(url).done(changeModalContent);
     modal.style.display = "block";
 
-    document.getElementsByTagName('body')[0].style.overflowY = 'hidden';
+    document.getElementsByClassName('container')[0].style.filter = 'blur(10px)';
+    body.style.overflowY = 'hidden';
 };
 
 span.onclick = function () {
     modal.style.display = "none";
-    document.getElementsByTagName('body')[0].style.overflowY = 'visible';
+    body.style.overflowY = 'visible';
+    document.getElementsByClassName('container')[0].style.filter = 'none'
 };
 
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
-        document.getElementsByTagName('body')[0].style.overflowY = 'visible';
+        body.style.overflowY = 'visible';
+        document.getElementsByClassName('container')[0].style.filter = 'none'
+
 
   }
 };
 
-function scrollWin(x, y) {
-    window.scrollBy(x, y);
-};
 
 function getDataByBest() {
     let resultsp1;

@@ -9,6 +9,7 @@ body {
     overflow-x: hidden;
     margin: 0;
     overflow-y: visible;
+
 }
 
 /* Navigation */
@@ -65,6 +66,7 @@ div.container {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    filter: none;
 }
 
 #sliders {
@@ -223,7 +225,6 @@ div#best-movie {
     overflow: auto; 
     background-color: rgba(0, 0, 0, 0.247);
     z-index: 3;
-    backdrop-filter: blur(10px);
   }
   .modal-box {
     position: relative;
