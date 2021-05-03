@@ -1,6 +1,7 @@
-getDataByCat('action')
+getDataByCat('comedy')
 getDataByCat('horror')
 getDataByCat('sci-fi')
+getDataByBest()
 
 
 var modal = document.getElementById("modalBox");
@@ -12,21 +13,90 @@ function showModal(movieid) {
     
     $.get(url).done(changeModalContent);
     modal.style.display = "block";
+
+    document.getElementsByTagName('body')[0].style.overflowY = 'hidden';
 };
 
 span.onclick = function () {
     modal.style.display = "none";
+    document.getElementsByTagName('body')[0].style.overflowY = 'visible';
 };
 
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
+        document.getElementsByTagName('body')[0].style.overflowY = 'visible';
+
   }
 };
 
 function scrollWin(x, y) {
     window.scrollBy(x, y);
 };
+
+function getDataByBest() {
+    let resultsp1;
+    let resultsp2;
+    let results;
+    let url_page1 = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score';
+    let url_page2 = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score&page=2';
+
+    $.get(url_page1).done(
+        function(data) {
+            resultsp1 = data.results;
+
+            $.get(url_page2).done(
+                function(data) {
+                    resultsp2 = data.results;
+                
+                    results = resultsp1.concat(resultsp2);
+        
+                    changeContentForBest(results)
+                }
+            );
+        }
+    );
+
+}
+
+
+function changeContentForBest(data) {
+
+    let best = document.getElementById('best-movie');
+    let button = document.getElementById('best-button');
+    let bestdesc = document.getElementById('best-desc');
+    let besttitle = document.getElementById('best-title')
+
+    let bestimg = best.getElementsByTagName('img')[0];
+    bestimg.src = data[0].image_url;
+    bestimg.alt = data[0].title;
+    button.setAttribute('onclick','showModal(' + data[0].id + ')');
+    besttitle.innerHTML = data[0].title
+
+
+    $.get('http://localhost:8000/api/v1/titles/' + data[0].id).done(
+        function(data) {
+            bestdesc.innerHTML = data.long_description
+        })
+    
+
+
+    let slider = document.getElementById('best');
+    let sliders = slider.getElementsByClassName('movie_item');
+
+    for (let i = 0; i < sliders.length; i++) {
+
+        let img = sliders[i].getElementsByTagName('img')[0];
+        img.src = data[i+1].image_url;
+        img.alt = data[i+1].title;
+        img.setAttribute('onclick','showModal(' + data[i+1].id +')' )
+
+      };
+
+    
+      
+};
+
 
 function getDataByCat(genre) {
 
@@ -76,7 +146,7 @@ let changeModalContent = function(data) {
 
     let title = document.getElementById('movie-title');
     let desc = document.getElementById('desc');
-    let rated = document.getElementById('rated');
+    let imdb = document.getElementById('imdb');
     let date = document.getElementById('date');
     let sec = document.getElementsByClassName('s-cont');
     let image = document.getElementById('modal-image');
@@ -143,3 +213,5 @@ function moveRight(sliderid) {
 
     return true;
 };
+
+setTimeout(function(){ document.getElementById('loading').style.display = 'none'; }, 1000);
